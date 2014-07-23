@@ -1,0 +1,69 @@
+<script type="text/javascript">
+
+function ajax_request() {
+  $.ajax({
+    url: "<%= running_bigbluebutton_room_url(@room, :format => 'json') %>",
+    dataType: 'json',
+    error: function(xhr_data) {
+      $("#meeting_status").html("<request error>.");
+      setTimeout(function() { ajax_request(); }, 10000);
+    },
+    success: function(xhr_data) {
+      if (xhr_data.running == 'false') {
+        $("#meeting_status").html("not running.");
+      } else {
+        $("#meeting_status").html("running!");
+      }
+      setTimeout(function() { ajax_request(); }, 10000);
+    },
+    contentType: 'application/json'
+  });
+}
+
+$(document).ready(function(){
+  ajax_request();
+});
+
+</script>
+
+<h1>Invite to the meeting <%= @room.name %></h1>
+
+<!-- A helper to show errors, add it to the views were you need it -->
+<!-- <%= bbb_rails_error_explanation %> -->
+
+<p>Meeting status: <span id="meeting_status">-</span> (<a href="javascript:ajax_request();">refresh</a>)</p>
+
+<div class="bbbrails_invite_device_type">
+  <% if params[:mobile] %>
+    In this page you can join the conference from a <b>mobile device</b>.
+    To join from a desktop <%= link_to "click here", invite_bigbluebutton_room_path(@room) %>.
+  <% else %>
+    In this page you can join the conference from a <b>desktop</b>.
+    To join from a mobile device <%= link_to "click here", invite_bigbluebutton_room_path(@room, :mobile => true) %>.
+  <% end %>
+</div>
+
+<p><%= @room.name %> requires a name and/or password to join:</p>
+<%= form_tag join_bigbluebutton_room_path(@room, :mobile => params[:mobile]) do %>
+
+  <div class="field">
+    <label for="user_name">Name:</label><br />
+    <% if bigbluebutton_user.nil? %>
+      <%= text_field_tag "user[name]", "" %>
+    <% else %>
+      <%= text_field_tag "user[name]", bigbluebutton_user.name, :readonly => true %>
+    <% end %>
+  </div>
+  <div class="field">
+    <label for="user_password">Password:</label><br />
+    <% if @user_role == :attendee %>
+      <%= password_field_tag "user[password]", @room.attendee_password, :readonly => true %>
+    <% elsif @user_role == :moderator %>
+      <%= password_field_tag "user[password]", @room.moderator_password, :readonly => true %>
+    <% else %>
+      <%= password_field_tag "user[password]", "" %>
+    <% end %>
+  </div>
+
+  <%= submit_tag "Submit" %>
+<% end %>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bbbtesting</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <% if notice %>
+  <p class="notice"><%= notice %></p>
+  <% elsif %>
+  <p class="alert"><%= alert %></p>
+  <% end %>
+  
+  <% if !current_user %>
+    <%= link_to "Sign In","/users/sign_in" %>
+  <% end %>  
+  <% if current_user %>
+    <%= link_to "Logout", destroy_user_session_path, :method => :delete %>
+  <% end %>
+  
+<%= yield %>
+
+</body>
+</html>

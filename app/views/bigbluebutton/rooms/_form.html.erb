@@ -1,0 +1,99 @@
+<% if @room.new_record? %>
+  <% url = bigbluebutton_rooms_path %>
+<% else %>
+  <% url = bigbluebutton_room_path(@room) %>
+<% end %>
+
+<%= form_for setup_bigbluebutton_room(@room), :url => url do |f| %>
+  <% if @room.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@room.errors.count, "error") %>:</h2>
+      <ul>
+      <% @room.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br />
+    <%= @room.id %>
+  </div>
+  <div class="field">
+    <%= f.label :server_id %><br />
+    <%= f.text_field :server_id %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :meetingid %><br />
+    <%= f.text_field :meetingid %>
+  </div>
+  <div class="field">
+    <%= f.label :private %><br />
+    <%= f.check_box :private %>
+  </div>
+  <div class="field">
+    <%= f.label :attendee_password %><br />
+    <%= f.text_field :attendee_password %>
+  </div>
+  <div class="field">
+    <%= f.label :moderator_password %><br />
+    <%= f.text_field :moderator_password %>
+  </div>
+  <div class="field">
+    <%= f.label :welcome_msg %><br />
+    <%= f.text_field :welcome_msg %>
+  </div>
+  <div class="field">
+    <%= f.label :logout_url %><br />
+    <%= f.text_field :logout_url %>
+  </div>
+  <div class="field">
+    <%= f.label :dial_number %><br />
+    <%= f.text_field :dial_number %>
+  </div>
+  <div class="field">
+    <%= f.label :voice_bridge %><br />
+    <%= f.text_field :voice_bridge %>
+  </div>
+  <div class="field">
+    <%= f.label :max_participants %><br />
+    <%= f.text_field :max_participants %>
+  </div>
+  <div class="field">
+    <%= f.label :external %><br />
+    <%= f.check_box :external %>
+  </div>
+  <div class="field">
+    <%= f.label :param %><br />
+    <%= f.text_field :param %>
+  </div>
+  <div class="field">
+    <%= f.label :record %><br />
+    <%= f.check_box :record %>
+  </div>
+  <div class="field">
+    <%= f.label :duration %><br />
+    <%= f.text_field :duration %>
+  </div>
+  <div class="field">
+    <b>Metadata</b> (by default we have 10 metadata in this view, but it's not limited to it)<br />
+    <%= f.fields_for :metadata do |metadata_form| %>
+      <%= metadata_form.label :name %>
+      <%= metadata_form.text_field :name %>
+      <%= metadata_form.label :content %>
+      <%= metadata_form.text_field :content %>
+      <%= metadata_form.check_box :_destroy %>
+      <%= metadata_form.label :_destroy, "Remove Metadata" %>
+      <br/>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
